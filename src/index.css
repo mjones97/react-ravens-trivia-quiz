@@ -1,48 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 * {
   margin: 0;
   padding: 0;
-  text-align: center;
-}
-
-.quiz-container {
-  width: 80%;
-  max-width: 600px;
-  margin: 50px auto;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.questions-container {
-  margin: 20px;
-}
-
-.question-text {
-  font-size: 18px;
-  margin-bottom: 25px;
-}
-
-.answer-btn, #restart-btn {
-  display: block;
-  margin: 10px auto;
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: purple;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.answer-btn:hover, #restart-btn:hover {
-  background-color: black;
-}
-
-#result-container {
-  text-align: center;
-  padding: 20px;
-}
-
-.summary {
-  padding: 20px 0;
 }

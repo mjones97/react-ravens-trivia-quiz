@@ -1,63 +1,91 @@
-import React, { useState } from 'react'
-import Question from './Question';
-import Result from './Result';
+import React, { useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { questions } from '../questions';
 
 const Quiz = () => {
-    const [questions] = useState([
-        { question: "When were the Ravens founded?", answers: ["1967", "1996", "2006", "1987"], correctAnswer: "1996" },
-        { question: "Who was the first player ever drafted by the Ravens?", answers: ["Johnny Unitas", "Ray Lewis", "Ed Reed", "Jonathan Ogden"], correctAnswer: "Jonathan Ogden" },
-        { question: "Who is the current head coach of the Ravens?", answers: ["Mike Tomlin", "John Madden", "John Harbaugh", "Brian Billick"], correctAnswer: "John Harbaugh" },
-        { question: "Art Modell moved his team from which city to Baltimore to become the Ravens?", answers: ["Cleveland", "Los Angeles", "Oakland", "Orlando"], correctAnswer: "Cleveland" },
-        { question: "What was the first stadium that the Ravens called home?", answers: ["Baltimore Stadium", "Heinz Field", "M&T Bank Stadium", "Memorial Stadium"], correctAnswer: "Memorial Stadium" },
-        { question: "What team did the Baltimore Ravens, originate from?", answers: ["Houston Oilers", "New England Patriots", "Cleveland Browns", "Miami Dolphins"], correctAnswer: "Cleveland Browns" },
-        { question: "In 2004, who did the Ravens original owner Art Modell sell the team to?", answers: ["Ralph Wilson", "Steve Bisciotti", "Jim Irsay", "Robert Kraft"], correctAnswer: "Steve Bisciotti" },
-        { question: "What are the two main team colors?", answers: ["Black and Blue", "Black and Orange", "Black and Purple", "Black and Yellow"], correctAnswer: "Black and Purple" },
-        { question: "Who was the first head coach of the Ravens?", answers: ["Ted Marchibroda", "Brian Billick", "Art Modell", "John Madden"], correctAnswer: "Ted Marchibroda" },
-        { question: "How many rushing yards did Jamal Lewis have in the 2000 Super Bowl season?", answers: ["1,320", "1,462", "1,263", "1,364"], correctAnswer: "1,364" }
-    ]);
-
+    const { teamId } = useParams();
+    const navigate = useNavigate();
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-    const [correctAnswerCount, setCorrectAnswerCount] = useState(0);
-    const [quizFinished, setQuizFinished] = useState(false);
+    const [selectedAnswer, setSelectedAnswer] = useState('');
+    const [score, setScore] = useState(0);
+    const [isQuizFinished, setIsQuizFinished] = useState(false);
 
-    const handleAnswer = (selectedAnswer) => {
-        const correctAnswer = questions[currentQuestionIndex].correctAnswer;
-
-        if (selectedAnswer === correctAnswer) {
-            setCorrectAnswerCount(prevCount => prevCount + 1);
-        }
-
-        setTimeout(() => {
-            if (currentQuestionIndex < questions.length - 1) {
-                setCurrentQuestionIndex(prevIndex => prevIndex + 1);
-            } else {
-                setQuizFinished(true);
-            }
-        }, 1000);
-    };
-
-    const restartQuiz = () => {
-        setCurrentQuestionIndex(0);
-        setCorrectAnswerCount(0);
-        setQuizFinished(false);
+    const teamQuestions = questions[teamId];
+    if (!teamQuestions) {
+        return <div>No questions available for this team.</div>;
     }
 
+    const question = teamQuestions[currentQuestionIndex];
+
+    const handleAnswerClick = (answer) => {
+        setSelectedAnswer(answer);
+    };
+
+    const handleNextQuestion = () => {
+        if (selectedAnswer === question.correctAnswer) {
+            setScore(score + 1);
+        }
+        setSelectedAnswer('');
+        if (currentQuestionIndex < teamQuestions.length - 1) {
+            setCurrentQuestionIndex(currentQuestionIndex + 1);
+        } else {
+            setIsQuizFinished(true);
+        }
+    };
+
+    const handleRestartQuiz = () => {
+        setCurrentQuestionIndex(0);
+        setScore(0);
+        setSelectedAnswer('');
+        setIsQuizFinished(false);
+    };
+
+    const handleBackToHome = () => {
+        navigate('/');
+    };
+
     return (
-        <div>
-            {quizFinished ? (
-                <Result
-                    score={correctAnswerCount}
-                    total={questions.length}
-                    onRestart={restartQuiz}
-                />
+        <div className='p-4'>
+            {!isQuizFinished ? (
+                <>
+                    <h2 className='text-2xl font-bold mb-4'>{question.text}</h2>
+                    <div className="mb-4">
+                        {question.answers.map((answer, index) => (
+                            <button
+                                key={index}
+                                className={`block w-full p-2 mb-2 rounded ${selectedAnswer === answer ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+                                onClick={() => handleAnswerClick(answer)}
+                            >
+                                {answer}
+                            </button>
+                        ))}
+                    </div>
+                    <button
+                        className='bg-blue-500 text-white p-2 rounded'
+                        onClick={handleNextQuestion}
+                    >
+                        {currentQuestionIndex < teamQuestions.length - 1 ? 'Next Question' : 'Finish Quiz'}
+                    </button>
+                </>
             ) : (
-                <Question
-                    question={questions[currentQuestionIndex]}
-                    onAnswer={handleAnswer}
-                />
+                <div className='mt-4'>
+                    <h3 className='text-xl font-semibold'>Your Score: {score}/{teamQuestions.length}</h3>
+                    <button
+                        className='bg-green-500 text-white p-2 rounded mr-2'
+                        onClick={handleRestartQuiz}
+                    >
+                        Restart Quiz
+                    </button>
+                    <button
+                        className='bg-gray-500 text-white p-2 rounded'
+                        onClick={handleBackToHome}
+                    >
+                        Back to Homepage
+                    </button>
+                </div>
             )}
         </div>
-    )
-}
+    );
+};
 
-export default Quiz
+export default Quiz;
