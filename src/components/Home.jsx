@@ -4,8 +4,12 @@ import { teams } from '../teams';
 
 const Home = () => {
     return (
-        <div className='p-4'>
-            <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-4'>
+        <div className='container mx-auto mt-6'>
+            <div className="text-center">
+                <h1 className='text-3xl font-semibold'>NFL Trivia</h1>
+                <p className='mt-1'>Select a team to begin a quiz</p>
+            </div>
+            <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-4 py-4'>
                 {teams.map((team) => (
                     <Link
                         key={team.id}
@@ -15,7 +19,7 @@ const Home = () => {
                         <img 
                             src={team.logo} 
                             alt={`${team.name} logo`} 
-                            className='w-24 h-24 mb-2'
+                            className='mx-auto mb-2 w-16 h-16 object-contain'
                         />
                         <span className='text-blue-600'>{team.name}</span>
                     </Link>

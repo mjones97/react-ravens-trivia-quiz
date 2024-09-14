@@ -12,7 +12,7 @@ const Quiz = () => {
 
     const teamQuestions = questions[teamId];
     if (!teamQuestions) {
-        return <div>No questions available for this team.</div>;
+        return <div className='text-center p-4'>No questions available for this team.</div>;
     }
 
     const question = teamQuestions[currentQuestionIndex];
@@ -45,15 +45,15 @@ const Quiz = () => {
     };
 
     return (
-        <div className='p-4'>
+        <div className='p-6 max-w-lg mx-auto bg-white rounded-lg shadow-lg mt-10'>
             {!isQuizFinished ? (
                 <>
-                    <h2 className='text-2xl font-bold mb-4'>{question.text}</h2>
-                    <div className="mb-4">
+                    <h2 className='text-3xl font-semibold mb-4'>{question.text}</h2>
+                    <div className="space-y-2 mb-4">
                         {question.answers.map((answer, index) => (
                             <button
                                 key={index}
-                                className={`block w-full p-2 mb-2 rounded ${selectedAnswer === answer ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+                                className={`block w-full p-3 rounded-lg border border-gray-300 ${selectedAnswer === answer ? 'bg-blue-600 text-white' : 'bg-gray-100'} transition-colors duration-300 hover:bg-blue-500 hover:text-white`}
                                 onClick={() => handleAnswerClick(answer)}
                             >
                                 {answer}
@@ -61,27 +61,29 @@ const Quiz = () => {
                         ))}
                     </div>
                     <button
-                        className='bg-blue-500 text-white p-2 rounded'
+                        className='bg-blue-600 text-white p-3 rounded-lg shadow-md hover:bg-blue-700 transition-colors duration-300'
                         onClick={handleNextQuestion}
                     >
                         {currentQuestionIndex < teamQuestions.length - 1 ? 'Next Question' : 'Finish Quiz'}
                     </button>
                 </>
             ) : (
-                <div className='mt-4'>
-                    <h3 className='text-xl font-semibold'>Your Score: {score}/{teamQuestions.length}</h3>
-                    <button
-                        className='bg-green-500 text-white p-2 rounded mr-2'
-                        onClick={handleRestartQuiz}
-                    >
-                        Restart Quiz
-                    </button>
-                    <button
-                        className='bg-gray-500 text-white p-2 rounded'
-                        onClick={handleBackToHome}
-                    >
-                        Back to Homepage
-                    </button>
+                <div className='mt-6 text-center'>
+                    <h3 className='text-2xl font-semibold mb-4'>Your Score: {score}/{teamQuestions.length}</h3>
+                    <div className='flex justify-center space-x-4'>
+                        <button
+                            className='bg-green-600 text-white p-3 rounded-lg shadow-md hover:bg-green-700 transition-colors duration-300'
+                            onClick={handleRestartQuiz}
+                        >
+                            Restart Quiz
+                        </button>
+                        <button
+                            className='bg-gray-600 text-white p-3 rounded-lg shadow-md hover:bg-gray-700 transition-colors duration-300'
+                            onClick={handleBackToHome}
+                        >
+                            Back to Homepage
+                        </button>
+                    </div>
                 </div>
             )}
         </div>
